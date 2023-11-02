@@ -43,9 +43,9 @@
                                 Actions
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="btnToggleActions">
-                                <li><a class="dropdown-item" href="#">View</a></li>
-                                <li><a class="dropdown-item" href="#">Edit</a></li>
-                                <li><a class="dropdown-item" href="#">Delete</a></li>
+								<li><a asp-controller="Users" asp-action="ShowView" asp-route-id="@item.Id" class="dropdown-item">View</a></li>
+								<li><a asp-controller="Users" asp-action="EditView" asp-route-id="@item.Id" class="dropdown-item">Edit</a></li>
+								<li><a asp-controller="Users" asp-action="DeleteView" asp-route-id="@item.Id" class="dropdown-item">Delete</a></li>
                             </ul>
                         </div>
                     </td>
@@ -62,7 +62,7 @@
 		<a asp-controller="Users" asp-action="List" asp-route-isActive="false" class="btn btn-default">Non Active</a>
     </div>
 
-    <a href="#" class="btn btn-primary float-end">
+	<a asp-controller="Users" asp-action="AddUserView" class="btn btn-primary float-end">
         Add User
     </a>
 </div>
