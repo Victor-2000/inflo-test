@@ -1,0 +1,27 @@
+﻿@model UserManagement.Models.User
+
+<div class="text-center align-middle">
+	<h2 class="text-center">Are you sure you want to delete data for @Model.Forename @Model.Surname?</h2>
+	<span>
+		<a asp-controller="Users" asp-action="List" class="btn btn-primary">
+			Cancel
+		</a>
+		<a class="btn btn-danger" onclick="makeDeleteRequest(@Model.Id)">
+			Delete
+		</a>
+	</span>
+	<script>
+		function makeDeleteRequest(userId){
+			$.ajax({
+				type: 'DELETE',
+				data: {
+					id: userId
+				},
+				success: function (result) {
+					window.location.reload();
+				}
+			})
+		}
+	</script>
+</div>
+
