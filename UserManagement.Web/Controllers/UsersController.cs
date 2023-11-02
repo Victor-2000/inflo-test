@@ -10,10 +10,9 @@ public class UsersController : Controller
     private readonly IUserService _userService;
     public UsersController(IUserService userService) => _userService = userService;
 
-    [HttpGet]
-    public ViewResult List()
+    private UserListViewModel? CreateListViewModel (IEnumerable<Models.User> users)
     {
-        var items = _userService.GetAll().Select(p => new UserListItemViewModel
+        var items = users.Select(p => new UserListItemViewModel
         {
             Id = p.Id,
             Forename = p.Forename,
@@ -26,6 +25,22 @@ public class UsersController : Controller
         {
             Items = items.ToList()
         };
+
+        return model;
+    }
+
+    [HttpGet]
+    public ViewResult List()
+    {
+        var model = CreateListViewModel(_userService.GetAll());
+
+        return View(model);
+    }
+
+    [HttpGet]
+    public ViewResult ListByActivity(bool isActive)
+    {
+        var model = CreateListViewModel(_userService.FilterByActive(isActive));
 
         return View(model);
     }
