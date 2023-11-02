@@ -30,17 +30,17 @@ public class UsersController : Controller
     }
 
     [HttpGet]
-    public ViewResult List()
+    public ViewResult List([FromQuery] bool? isActive)
     {
-        var model = CreateListViewModel(_userService.GetAll());
-
-        return View(model);
-    }
-
-    [HttpGet]
-    public ViewResult ListByActivity(bool isActive)
-    {
-        var model = CreateListViewModel(_userService.FilterByActive(isActive));
+        UserListViewModel? model;
+        if (isActive != null)
+        {
+            model = CreateListViewModel(_userService.FilterByActive((bool)isActive));
+        }
+        else
+        {
+            model = CreateListViewModel(_userService.GetAll());
+        }
 
         return View(model);
     }
