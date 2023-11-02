@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UserManagement.Data;
 using UserManagement.Models;
@@ -22,4 +23,31 @@ public class UserService : IUserService
     }
 
     public IEnumerable<User> GetAll() => _dataAccess.GetAll<User>();
+
+    public User FindUserById(int userId)
+    {
+        User? user;
+        try
+        {
+           user = _dataAccess.GetAll<User>().Where(_dataAccess => _dataAccess.Id == userId).First();
+        } catch(InvalidOperationException ex)
+        {
+            throw ex;
+        }
+        return user;
+    }
+
+    public void DeleteUser(int userId)
+    {
+        User user;
+        try
+        {
+            user = FindUserById(userId);
+            _dataAccess.Delete(user);
+        }
+        catch(InvalidOperationException ex)
+        {
+            throw ex;
+        }
+    }
 }
