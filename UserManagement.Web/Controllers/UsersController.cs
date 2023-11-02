@@ -70,7 +70,7 @@ public class UsersController : Controller
         return RedirectToAction("List");
     }
 
-    [HttpDelete]
+    [HttpDelete("delete")]
     public StatusCodeResult Delete(int id)
     {
         try
@@ -107,12 +107,13 @@ public class UsersController : Controller
         return RedirectToAction("List");
     }
 
-    [HttpPost]
+    [HttpPut("edit")]
     public StatusCodeResult Edit(int id)
     {
         try
         {
-            _userService.EditUser(id);
+            //TODO: Uncomment!
+            //_userService.EditUser(id);
         }
         catch (InvalidOperationException ex)
         {
@@ -127,7 +128,7 @@ public class UsersController : Controller
     }
 
     [HttpGet("view")]
-    public ActionResult ShowView([FromQuery] int id)
+    public ActionResult View([FromQuery] int id)
     {
         try
         {
@@ -145,37 +146,19 @@ public class UsersController : Controller
         return RedirectToAction("List");
     }
 
-    [HttpPost]
-    public StatusCodeResult Show(int id)
-    {
-        try
-        {
-            _userService.ViewUser(id);
-        }
-        catch (InvalidOperationException ex)
-        {
-            //User not found
-            if (ex != null)
-            {
-                return NotFound();
-            }
-        }
-
-        return Ok();
-    }
-
-    [HttpGet("view")]
+    [HttpGet("add")]
     public ActionResult AddUserView([FromQuery] int id)
     {
       return View();
     }
 
-    [HttpPost]
+    [HttpPost("add")]
     public StatusCodeResult AddUser(int id)
     {
         try
         {
-            _userService.AddUser(id);
+            //TODO: Uncomment!
+            //_userService.AddUser(id);
         }
         catch (InvalidOperationException ex)
         {
