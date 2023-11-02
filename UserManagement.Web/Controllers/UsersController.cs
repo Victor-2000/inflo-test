@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using UserManagement.Services.Domain.Interfaces;
 using UserManagement.Web.Models.Users;
 
@@ -49,5 +50,142 @@ public class UsersController : Controller
         }
 
         return View(model);
+    }
+
+    [HttpGet("delete")]
+    public ActionResult DeleteView([FromQuery] int id)
+    {
+        try
+        {
+            return View(_userService.FindUserById(id));
+        }catch (InvalidOperationException ex)
+        {
+            //User not found so return to List
+            if (ex != null)
+            {
+                return RedirectToAction("List");
+            }
+        }
+
+        return RedirectToAction("List");
+    }
+
+    [HttpDelete]
+    public StatusCodeResult Delete(int id)
+    {
+        try
+        {
+            _userService.DeleteUser(id);
+        }catch(InvalidOperationException ex)
+        {
+            //User not found
+            if(ex != null)
+            {
+                return NotFound();
+            }
+        }
+
+        return Ok();
+    }
+
+    [HttpGet("edit")]
+    public ActionResult EditView([FromQuery] int id)
+    {
+        try
+        {
+            return View(_userService.FindUserById(id));
+        }
+        catch (InvalidOperationException ex)
+        {
+            //User not found so return to List
+            if (ex != null)
+            {
+              return  RedirectToAction("List");
+            }
+        }
+
+        return RedirectToAction("List");
+    }
+
+    [HttpPost]
+    public StatusCodeResult Edit(int id)
+    {
+        try
+        {
+            _userService.EditUser(id);
+        }
+        catch (InvalidOperationException ex)
+        {
+            //User not found
+            if (ex != null)
+            {
+                return NotFound();
+            }
+        }
+
+        return Ok();
+    }
+
+    [HttpGet("view")]
+    public ActionResult ShowView([FromQuery] int id)
+    {
+        try
+        {
+            return View(_userService.FindUserById(id));
+        }
+        catch (InvalidOperationException ex)
+        {
+            //User not found so return to List
+            if (ex != null)
+            {
+                return RedirectToAction("List");
+            }
+        }
+
+        return RedirectToAction("List");
+    }
+
+    [HttpPost]
+    public StatusCodeResult Show(int id)
+    {
+        try
+        {
+            _userService.ViewUser(id);
+        }
+        catch (InvalidOperationException ex)
+        {
+            //User not found
+            if (ex != null)
+            {
+                return NotFound();
+            }
+        }
+
+        return Ok();
+    }
+
+    [HttpGet("view")]
+    public ActionResult AddUserView([FromQuery] int id)
+    {
+      return View();
+    }
+
+    [HttpPost]
+    public StatusCodeResult AddUser(int id)
+    {
+        try
+        {
+            _userService.AddUser(id);
+        }
+        catch (InvalidOperationException ex)
+        {
+            //User not found
+            if (ex != null)
+            {
+                return NotFound();
+            }
+        }
+
+        return Ok();
     }
 }
