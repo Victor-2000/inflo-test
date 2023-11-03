@@ -1,0 +1,105 @@
+﻿@model UserManagement.Models.User
+
+<section style="background-color: white; height:90vh">
+	<div class="container py-5 h-100">
+		<div class="row justify-content-center align-items-center h-100">
+			<div class="col-12 col-lg-9 col-xl-7">
+				<div class="shadow card-registration" style="border-radius: 15px;">
+					<div class="card-body p-4 p-md-5">
+						<h3 class="pb-2">Add User</h3>
+						@if (ViewBag.Message != null)
+						{
+							<div class="text-danger mb-3 pb-md-0 mb-md-4">
+								@ViewBag.Message
+							</div>
+						}
+						<form method="post" class="needs-validation">
+
+							<input type="hidden" name="id" value="@Model.Id"/>
+
+							<div class="row">
+								<div class="col-md-6 mb-4">
+
+									<div class="form-outline">
+										<label class="form-label" for="forename">First Name</label>
+										<input type="text" id="forename" name="forename" class="form-control form-control-lg" value="@Model.Forename" required />
+									</div>
+
+								</div>
+								<div class="col-md-6 mb-4">
+
+									<div class="form-outline">
+										<label class="form-label" for="surname">Last Name</label>
+										<input type="text" id="surname" name="surname" class="form-control form-control-lg" value="@Model.Surname" required />
+									</div>
+
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-md-6 mb-4 d-flex align-items-center">
+
+									<div class="form-outline w-100 col-lg-3 col-sm-6">
+										<label for="dateOfBirth">Birthday</label>
+										<input id="birthdayDate" class="form-control" type="date" name="dateOfBirth" value="@Model.DateOfBirth.ToString("yyyy-MM-dd")" required />
+										<span id="birthdayDateSelected"></span>
+									</div>
+
+								</div>
+								<div class="col-md-6 mb-4">
+
+									<h6 class="mb-2 pb-1">Is Active? </h6>
+
+									<div class="form-check form-check-inline">
+										@if (!Model.IsActive)
+										{
+											<input class="form-check-input" type="radio" name="isActive" id="notActive" value="false" 
+											checked
+											/>
+										}
+										else
+										{
+											<input class="form-check-input" type="radio" name="isActive" id="notActive" value="false"
+											 />
+										}
+										<label class="form-check-label" for="notActive">No</label>
+									</div>
+
+									<div class="form-check form-check-inline">
+										@if (!Model.IsActive)
+										{
+											<input class="form-check-input" type="radio" name="isActive" id="active"
+												value="true" />
+										}else
+										{
+											<input class="form-check-input" type="radio" name="isActive" id="active"
+												   value="true" checked/>
+										}
+										<label class="form-check-label" for="active">Yes</label>
+									</div>
+
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-md-6 mb-4 pb-2">
+									<div class="form-outline">
+										<label class="form-label" for="email">Email</label>
+										<input type="email" id="email" name="email" class="form-control form-control-lg" value="@Model.Email" required />
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-12 mb-4 float-right d-flex align-items-center justify-content-center">
+									<a asp-controller="Users" asp-action="List" class="btn btn-danger btn-lg m-2">Cancel</a>
+									<input class="btn btn-primary btn-lg m-2" type="submit" value="Submit" />
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+

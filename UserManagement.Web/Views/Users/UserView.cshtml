@@ -1,0 +1,51 @@
+﻿@model UserManagement.Models.User
+
+<section style="background-color: white; height:90vh">
+	<div class="container py-5 h-100">
+		<div class="row justify-content-center align-items-center h-100">
+			<div class="col-12 col-lg-9 col-xl-7">
+				<div class="shadow card-registration" style="border-radius: 15px;">
+					<div class="card-body p-4 p-md-5">
+						<div class="row">
+							<h3 class="pb-2 col-md-12 mb-4 d-flex align-items-center justify-content-center">@Model.Forename @Model.Surname</h3>
+						</div>
+
+						<div class="row">
+							<div class="col-md-6 mb-4">
+								<div class="form-outline w-100 col-lg-3 col-sm-6 d-flex align-items-center justify-content-center">
+									Birthday: @Model.DateOfBirth.ToString("dd/MM/yyyy")
+								</div>
+							</div>
+							<div class="col-md-6 mb-4 pb-2">
+								<div class="form-outline w-100 col-lg-3 col-sm-6 d-flex align-items-center justify-content-center">
+									Email: @Model.Email
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-12 mb-4 pb-2">
+								<div class="form-outline w-100 col-lg-3 col-sm-6 d-flex align-items-center justify-content-center">
+									@if (Model.IsActive)
+									{
+										<span> Activity: Active </span>
+									}else
+									{
+										<span> Activity: Inactive </span>
+									}
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-12 mb-4 d-flex align-items-center justify-content-center">
+								<a asp-controller="Users" asp-action="List" class="btn btn-danger btn-lg m-2">Back</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
