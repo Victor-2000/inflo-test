@@ -1,15 +1,24 @@
 ﻿@model UserManagement.Models.User
 
-<div class="text-center align-middle">
-	<h2 class="text-center">Are you sure you want to delete data for @Model.Forename @Model.Surname?</h2>
-	<span>
-		<a asp-controller="Users" asp-action="List" class="btn btn-primary">
-			Cancel
-		</a>
-		<a class="btn btn-danger" onclick="makeDeleteRequest(@Model.Id)">
-			Delete
-		</a>
-	</span>
+<section style="height:90vh">
+	<div class="container py-5 h-100">
+		<div class="row justify-content-center align-items-center h-100">
+			<div class="col-12 col-lg-9 col-xl-7">
+				<div class="text-center align-middle shadow card-registration p-4" style="border-radius: 15px;">
+					<h2 class="text-center m-4">Are you sure you want to delete data for @Model.Forename @Model.Surname?</h2>
+					<span>
+						<a asp-controller="Users" asp-action="List" class="btn btn-primary m-2">
+							Cancel
+						</a>
+						<a class="btn btn-danger m-2" onclick="makeDeleteRequest(@Model.Id)">
+							Delete
+						</a>
+					</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<script>
 		function makeDeleteRequest(userId){
 			$.ajax({
@@ -23,5 +32,5 @@
 			})
 		}
 	</script>
-</div>
+</section>
 
