@@ -2,6 +2,7 @@
 using System.Linq;
 using UserManagement.Services.Domain.Interfaces;
 using UserManagement.Web.Models.Users;
+using UserManagement.Models;
 
 namespace UserManagement.WebMS.Controllers;
 
@@ -89,8 +90,16 @@ public class UsersController : Controller
     }
 
     [HttpGet("edit")]
-    public ActionResult EditView([FromQuery] int id)
+    public ActionResult EditView([FromQuery] int id, bool? inputValid)
     {
+        if (inputValid != null)
+        {
+            ViewBag.Message = "Invalid user details!";
+        }
+        else
+        {
+            ViewBag.Message = null;
+        }
         try
         {
             return View(_userService.FindUserById(id));
@@ -107,28 +116,27 @@ public class UsersController : Controller
         return RedirectToAction("List");
     }
 
-    [HttpPut("edit")]
-    public StatusCodeResult Edit(int id)
+    [HttpPost("edit")]
+    public ActionResult Edit([FromForm]User user)
     {
         try
         {
-            //TODO: Uncomment!
-            //_userService.EditUser(id);
+            _userService.EditUser(user);
         }
-        catch (InvalidOperationException ex)
+        catch (Exception ex)
         {
-            //User not found
+            //User not valid or not found
             if (ex != null)
             {
-                return NotFound();
+                return RedirectToAction("EditView", new { id = user.Id, inputValid = false });
             }
         }
 
-        return Ok();
+        return RedirectToAction("List");
     }
 
     [HttpGet("view")]
-    public ActionResult View([FromQuery] int id)
+    public ActionResult UserView([FromQuery] int id)
     {
         try
         {
@@ -147,28 +155,35 @@ public class UsersController : Controller
     }
 
     [HttpGet("add")]
-    public ActionResult AddUserView([FromQuery] int id)
+    public ActionResult AddView(bool? inputValid)
     {
-      return View();
+        if(inputValid != null)
+        {
+            ViewBag.Message = "Invalid user details!";
+        }
+        else
+        {
+            ViewBag.Message = null;
+        }
+        return View();
     }
 
     [HttpPost("add")]
-    public StatusCodeResult AddUser(int id)
+    public ActionResult AddUser([FromForm]User user)
     {
         try
         {
-            //TODO: Uncomment!
-            //_userService.AddUser(id);
+            _userService.AddUser(user);
         }
-        catch (InvalidOperationException ex)
+        catch (InvalidCastException ex)
         {
-            //User not found
+            //User not valid
             if (ex != null)
             {
-                return NotFound();
+                return RedirectToAction("AddView", new {inputValid = false});
             }
         }
 
-        return Ok();
+        return RedirectToAction("List");
     }
 }
