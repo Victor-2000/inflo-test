@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using UserManagement.Data;
 using UserManagement.Models;
 using UserManagement.Services.Domain.Interfaces;
@@ -24,7 +25,7 @@ public class UserService : IUserService
 
     public IEnumerable<User> GetAll() => _dataAccess.GetAll<User>();
 
-    public User FindUserById(int userId)
+    public User FindUserById(long userId)
     {
         User? user;
         try
@@ -35,6 +36,26 @@ public class UserService : IUserService
             throw ex;
         }
         return user;
+    }
+
+    private bool ValidateEmail(string email)
+    {
+        return Regex.IsMatch(email, @"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$");
+    }
+
+    private bool ValidateInput(User user)
+    {
+        if (string.IsNullOrWhiteSpace(user.Surname) || string.IsNullOrWhiteSpace(user.Forename) || string.IsNullOrWhiteSpace(user.Email))
+        {
+            return false;
+        }
+
+        if (!ValidateEmail(user.Email))
+        {
+            return false;
+        }
+
+        return true;
     }
 
     public void DeleteUser(int userId)
@@ -48,6 +69,46 @@ public class UserService : IUserService
         catch(InvalidOperationException ex)
         {
             throw ex;
+        }
+    }
+
+    public void EditUser(User user)
+    {
+        if (ValidateInput(user))
+        {
+            User oldUserData;
+            try
+            {
+                oldUserData = FindUserById(user.Id);
+
+                oldUserData.Surname = user.Surname;
+                oldUserData.Forename = user.Forename;
+                oldUserData.DateOfBirth = user.DateOfBirth;
+                oldUserData.Email = user.Email;
+                oldUserData.IsActive = user.IsActive;
+
+                _dataAccess.Update(oldUserData);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw ex;
+            }
+        }
+        else
+        {
+            throw new InvalidCastException("Invalid input");
+        }
+    }
+
+    public void AddUser(User user)
+    {
+        if (ValidateInput(user))
+        {
+          _dataAccess.Create(user);
+        }
+        else
+        {
+            throw new InvalidCastException("Invalid input");
         }
     }
 }
