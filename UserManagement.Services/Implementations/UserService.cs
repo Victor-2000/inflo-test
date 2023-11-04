@@ -64,7 +64,7 @@ public class UserService : IUserService
         try
         {
             user = FindUserById(userId);
-            _dataAccess.Delete(user);
+            user.IsDeleted = true;
         }
         catch(InvalidOperationException ex)
         {

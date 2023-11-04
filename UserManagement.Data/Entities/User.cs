@@ -13,4 +13,5 @@ public class User
     public string Email { get; set; } = default!;
     public DateTime DateOfBirth { get; set; } = default!;
     public bool IsActive { get; set; }
+    public bool IsDeleted {  get; set; } = false;
 }
