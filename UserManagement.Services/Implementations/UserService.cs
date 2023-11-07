@@ -35,7 +35,7 @@ public class UserService : IUserService
         User? user;
         try
         {
-           user = _dataAccess.GetAll<User>().Where(_dataAccess => _dataAccess.Id == userId).First();
+           user = _dataAccess.GetAll<User>(user => user.Logs).Where(_dataAccess => _dataAccess.Id == userId).First();
         } catch(InvalidOperationException ex)
         {
             throw ex;

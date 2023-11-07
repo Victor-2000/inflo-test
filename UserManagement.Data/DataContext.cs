@@ -13,6 +13,11 @@ public class DataContext : DbContext, IDataContext
     protected override void OnConfiguring(DbContextOptionsBuilder options)
         => options.UseInMemoryDatabase("UserManagement.Data.DataContext");
 
+    public void DetachEntry(object entry)
+    {
+        this.Entry(entry).State = EntityState.Detached;
+    }
+
     private DateTime GenerateRandomDate()
     {
         Random rnd = new Random();

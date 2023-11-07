@@ -6,6 +6,13 @@ namespace UserManagement.Data;
 
 public interface IDataContext
 {
+
+    /// <summary>
+    /// Detaches a current entry to avoid double tracking by accident
+    /// </summary>
+    /// <param name="entry">The entry to be detached</param>
+    public void DetachEntry(object entry);
+
     /// <summary>
     /// Get a list of items
     /// </summary>

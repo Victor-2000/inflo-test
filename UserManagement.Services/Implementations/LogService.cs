@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Microsoft.EntityFrameworkCore;
 using UserManagement.Data;
 using UserManagement.Models;
 using UserManagement.Services.Domain.Interfaces;
@@ -85,6 +84,8 @@ public class LogService : ILogsService
         log.User = user;
         log.Type = type;
 
-        _dataAccess.Create(log);
+        _dataAccess.DetachEntry(log.User);
+
+        _dataAccess.Update(log);
     }
 }
