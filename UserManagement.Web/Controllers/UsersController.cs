@@ -49,7 +49,7 @@ public class UsersController : Controller
         var items = logs.Select(p => new LogListItemViewModel
         {
             Id = p.Id,
-            User = _userService.FindUserById(p.UserId),
+            User = p.User,
             DateTimeOfIssue = p.DateTimeOfIssue.ToString("dd/MM/yyyy HH:mm:ss"),
             Type = p.Type,
         });

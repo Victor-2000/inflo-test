@@ -75,7 +75,7 @@ public class DataContext : DbContext, IDataContext
             new Log { Id = 11, DateTimeOfIssue = GenerateRandomDateTime(), UserId = 11, Type=LogType.CREATE},
         };
 
-        model.Entity<User>().HasData(users);
+       model.Entity<User>().HasData(users);
 
        //Filter out the soft deleted elements
        model.Entity<User>().HasQueryFilter(u => !u.IsDeleted);

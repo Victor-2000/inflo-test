@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Microsoft.EntityFrameworkCore;
 using UserManagement.Data;
 using UserManagement.Models;
 using UserManagement.Services.Domain.Interfaces;
@@ -13,9 +14,9 @@ public class LogService : ILogsService
     private readonly IDataContext _dataAccess;
     public LogService(IDataContext dataAccess) => _dataAccess = dataAccess;
 
-    public IEnumerable<Log> GetAll() => _dataAccess.GetAll<Log>(log => log.User, log => log.LogEntries);
+    public IEnumerable<Log> GetAll() => _dataAccess.GetAll<Log>(log => log.User, log => log.LogEntries).IgnoreQueryFilters();
 
-    public IEnumerable<Log> FindLogsbyUserId(long userId) => _dataAccess.GetAll<Log>(log => log.User, log => log.LogEntries).Where(_dataAccess => _dataAccess.UserId == userId);
+    public IEnumerable<Log> FindLogsbyUserId(long userId) => _dataAccess.GetAll<Log>(log => log.User, log => log.LogEntries).IgnoreQueryFilters().Where(_dataAccess => _dataAccess.UserId == userId);
 
     private Log PopulateLog(User user, Log log)
     {

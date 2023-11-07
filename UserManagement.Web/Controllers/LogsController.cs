@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using UserManagement.Models;
 using UserManagement.Services.Domain.Interfaces;
@@ -12,12 +11,10 @@ public class LogsController : Controller
 {
 
     private readonly ILogsService _logsService;
-    private readonly IUserService _userService;
 
     public LogsController(ILogsService logsService, IUserService userService)
     {
         _logsService = logsService;
-        _userService = userService;
     }
 
     /// <summary>
@@ -30,7 +27,7 @@ public class LogsController : Controller
         var items = logs.Select(p => new LogListItemViewModel
         {
             Id = p.Id,
-            User = _userService.FindUserById(p.UserId),
+            User = p.User,
             DateTimeOfIssue = p.DateTimeOfIssue.ToString("dd/MM/yyyy HH:mm:ss"),
             Type = p.Type,
         });
