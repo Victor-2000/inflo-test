@@ -1,0 +1,59 @@
+﻿@model UserManagement.Web.Models.Logs.LogListViewModel
+
+<h2>Logs</h2>
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+				<th>Actions</th>
+				<th>Message</th>
+				<th>Log Type</th>
+				<th class ="text-end"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var log in Model.Items)
+            {
+				<tr>
+					<td>
+						<a asp-controller="Logs" asp-action="LogView" asp-route-LogId="@log.Id" class="btn btn-primary">
+							View Log
+						</a>
+					</td>
+					<td>
+						User "@log.User.Forename @log.User.Surname" was
+						@{
+							switch (log.Type)
+							{
+								
+								case UserManagement.Models.LogType.CREATE:
+									<text>
+										added in the database.
+									</text>
+									break;
+								case UserManagement.Models.LogType.UPDATE:
+									<text>
+										updated in the database.
+									</text>
+									break;
+								case UserManagement.Models.LogType.DELETE:
+									<text>
+										removed from the database.
+									</text>
+									break;
+							}
+						}
+					</td>
+					<td>
+						@log.Type
+					</td>
+					<td class="text-end">
+						@log.DateTimeOfIssue
+					</td>
+				</tr>
+            }
+        </tbody>
+    </table>
+</div>
+
