@@ -1,6 +1,7 @@
 using System.Linq;
 using UserManagement.Models;
 using UserManagement.Services.Domain.Implementations;
+using UserManagement.Services.Domain.Interfaces;
 
 namespace UserManagement.Data.Tests;
 
@@ -40,6 +41,25 @@ public class UserServiceTests
         return users;
     }
 
+    private Log[] SetupLogs(long userId = 1, LogType logType = LogType.CREATE)
+    {
+        var logs = new[]
+        {
+            new Log
+            {
+                UserId = userId,
+                Type = logType,
+            }
+        };
+
+        _logsService
+            .Setup(s => s.GetAll())
+            .Returns(logs);
+
+        return logs;
+    }
+
     private readonly Mock<IDataContext> _dataContext = new();
-    private UserService CreateService() => new(_dataContext.Object);
+    private readonly Mock<ILogsService> _logsService = new();
+    private UserService CreateService() => new(_dataContext.Object, _logsService.Object);
 }

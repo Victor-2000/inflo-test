@@ -10,9 +10,12 @@ public class Log
     [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public long Id { get; set; }
     public long UserId { get; set; } = default!;
-    public List<string> PropertyNames { get; set; } = new List<string>();
-    public List<string> PropertyOldValues { get; set; } = new List<string>();
-    public List<string> PropertyNewValues { get; set; } = new List<string>();
     public LogType Type { get; set; } = default!;
     public DateTime DateTimeOfIssue { get; set; } = default!;
+
+    public User User { get; set; } = default!;
+
+    // Collection of LogEntries for property changes
+    public ICollection<LogEntry> LogEntries { get; set; } = new List<LogEntry>();
 }
+
