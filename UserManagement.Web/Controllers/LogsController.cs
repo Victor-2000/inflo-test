@@ -12,7 +12,7 @@ public class LogsController : Controller
 
     private readonly ILogsService _logsService;
 
-    public LogsController(ILogsService logsService, IUserService userService)
+    public LogsController(ILogsService logsService)
     {
         _logsService = logsService;
     }

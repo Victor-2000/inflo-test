@@ -12,6 +12,7 @@ namespace UserManagement.Services.Domain.Implementations;
 public class LogService : ILogsService
 {
     private readonly IDataContext _dataAccess;
+
     public LogService(IDataContext dataAccess) => _dataAccess = dataAccess;
 
     public IEnumerable<Log> GetAll() => _dataAccess.GetAll<Log>(log => log.User, log => log.LogEntries).IgnoreQueryFilters();

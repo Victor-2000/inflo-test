@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using UserManagement.Models;
 
@@ -43,6 +45,42 @@ public class DataContext : DbContext, IDataContext
         return randomDate;
     }
 
+    /// <summary>
+    /// Populates the log with LogEntries (mostly used for creation and deletion) 
+    /// </summary>
+    /// <param name="user">The user that the log is targeting</param>
+    /// <returns></returns>
+    public List<LogEntry> GenerateLogEntryList(User user, Log log)
+    {
+        Type userType = user.GetType();
+        PropertyInfo[] properties = userType.GetProperties();
+
+        List<LogEntry> logEntries = new List<LogEntry>();
+
+        foreach (PropertyInfo property in properties)
+        {
+            object? value = property.GetValue(user);
+
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+            string propertyStringValue = value != null ? value.ToString() : string.Empty;
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+
+#pragma warning disable CS8601 // Possible null reference assignment.
+            LogEntry logEntry = new LogEntry()
+            {
+                PropertyName = property.Name,
+                PropertyNewValue = propertyStringValue,
+                PropertyOldValue = propertyStringValue,
+                LogId = log.Id,
+            };
+#pragma warning restore CS8601 // Possible null reference assignment.
+
+            logEntries.Add(logEntry);
+        }
+
+        return logEntries;
+    }
+
     protected override void OnModelCreating(ModelBuilder model)
     {
         User[] users = new[]
@@ -60,6 +98,7 @@ public class DataContext : DbContext, IDataContext
             new User { Id = 11, Forename = "Robin", Surname = "Feld", DateOfBirth = GenerateRandomDate(), Email = "rfeld@example.com", IsActive = true },
         };
 
+
         Log[] logs = new[]
           {
             new Log { Id = 1, DateTimeOfIssue = GenerateRandomDateTime(), UserId = 1, Type=LogType.CREATE},
@@ -75,14 +114,31 @@ public class DataContext : DbContext, IDataContext
             new Log { Id = 11, DateTimeOfIssue = GenerateRandomDateTime(), UserId = 11, Type=LogType.CREATE},
         };
 
+        List<LogEntry> AllLogEntries = new();
+        long logEntryId = 1;
+        for (int i=0; i<logs.Length; i++)
+        {
+            var logEntryList = GenerateLogEntryList(users[i], logs[i]);
+            foreach (var logEntry in logEntryList)
+            {
+                logEntryId++;
+                logEntry.Id = logEntryId;
+                AllLogEntries.Add(logEntry);
+            }
+        }
+        LogEntry[] logEntriesArray = AllLogEntries.ToArray();
+
        model.Entity<User>().HasData(users);
 
        //Filter out the soft deleted elements
        model.Entity<User>().HasQueryFilter(u => !u.IsDeleted);
 
        model.Entity<Log>().HasData(logs);
+       model.Entity<LogEntry>().HasData(logEntriesArray);
 
-       model.Entity<Log>()
+
+        //Set up relations between data
+        model.Entity<Log>()
        .HasMany(l => l.LogEntries)
        .WithOne(le => le.Log)
        .HasForeignKey(le => le.LogId);
@@ -91,6 +147,7 @@ public class DataContext : DbContext, IDataContext
        .HasMany(u => u.Logs)
        .WithOne(l => l.User)     
        .HasForeignKey(l => l.UserId);
+
     }
 
     public DbSet<User>? Users { get; set; }
