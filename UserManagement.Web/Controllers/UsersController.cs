@@ -3,6 +3,7 @@ using System.Linq;
 using UserManagement.Services.Domain.Interfaces;
 using UserManagement.Web.Models.Users;
 using UserManagement.Models;
+using UserManagement.Web.Models.Logs;
 
 namespace UserManagement.WebMS.Controllers;
 
@@ -10,6 +11,7 @@ namespace UserManagement.WebMS.Controllers;
 public class UsersController : Controller
 {
     private readonly IUserService _userService;
+
     public UsersController(IUserService userService) => _userService = userService;
 
     /// <summary>
@@ -17,7 +19,7 @@ public class UsersController : Controller
     /// </summary>
     /// <param name="users"> List of user models picked up from the service </param>
     /// <returns>The list view model which is added to List view.</returns>
-    private UserListViewModel? CreateListViewModel (IEnumerable<Models.User> users)
+    private UserListViewModel? CreateUserListViewModel (IEnumerable<User> users)
     {
         var items = users.Select(p => new UserListItemViewModel
         {
@@ -37,17 +39,40 @@ public class UsersController : Controller
         return model;
     }
 
+    /// <summary>
+    /// Create a LogListViewModel from a list of Logs which is fed into the view.
+    /// </summary>
+    /// <param name="logs"> List of logs models picked up from the service </param>
+    /// <returns>The list view model which is added to List view.</returns>
+    public LogListViewModel? CreateLogListViewModel(IEnumerable<Log> logs)
+    {
+        var items = logs.Select(p => new LogListItemViewModel
+        {
+            Id = p.Id,
+            User = _userService.FindUserById(p.UserId),
+            DateTimeOfIssue = p.DateTimeOfIssue.ToString("dd/MM/yyyy HH:mm:ss"),
+            Type = p.Type,
+        });
+
+        var model = new LogListViewModel
+        {
+            Items = items.ToList()
+        };
+
+        return model;
+    }
+
     [HttpGet]
     public ViewResult List([FromQuery] bool? isActive)
     {
         UserListViewModel? model;
         if (isActive != null)
         {
-            model = CreateListViewModel(_userService.FilterByActive((bool)isActive));
+            model = CreateUserListViewModel(_userService.FilterByActive((bool)isActive));
         }
         else
         {
-            model = CreateListViewModel(_userService.GetAll());
+            model = CreateUserListViewModel(_userService.GetAll());
         }
 
         return View(model);
@@ -140,7 +165,8 @@ public class UsersController : Controller
     {
         try
         {
-            return View(_userService.FindUserById(id));
+            User user = _userService.FindUserById(id);
+            return View(user);
         }
         catch (InvalidOperationException ex)
         {
