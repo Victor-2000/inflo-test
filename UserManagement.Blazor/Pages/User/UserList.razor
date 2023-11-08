@@ -1,0 +1,107 @@
+﻿@page "/users"
+@using UserManagement.Blazor.Models.Users
+@using UserManagement.Services.Domain.Interfaces;
+@using UserManagement.Models;
+
+@inject IUserService _userService
+
+<h2>User List</h2>
+
+<div class="table-responsive">
+	<table class="table table-striped overflow-auto" style="max-height:75%">
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Forename</th>
+				<th>Surname</th>
+				<th>Date of Birth</th>
+				<th>Email</th>
+				<th>Account Active</th>
+				<th style="width: 1px;"></th>
+			</tr>
+		</thead>
+		<tbody>
+			@if(Model != null)
+			{	
+				@foreach (var item in Model.Items)
+				{
+					<tr>
+						<td>
+							@item.Id
+						</td>
+						<td>
+							@item.Forename
+						</td>
+						<td>
+							@item.Surname
+						</td>
+						<td>
+							@item.DateOfBirth
+						</td>
+						<td>
+							@item.Email
+						</td>
+						<td>
+							@(item.IsActive ? "Yes" : "No")
+						</td>
+						<td>
+							<div class="dropdown">
+								<button type="button" class="btn btn-default dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="btnToggleActions">
+									Actions
+								</button>
+								<ul class="dropdown-menu" aria-labelledby="btnToggleActions">
+									<li><a asp-controller="Users" asp-action="UserView" asp-route-id="@item.Id" class="dropdown-item">View</a></li>
+									<li><a asp-controller="Users" asp-action="EditView" asp-route-id="@item.Id" class="dropdown-item">Edit</a></li>
+									<li><a asp-controller="Users" asp-action="DeleteView" asp-route-id="@item.Id" class="dropdown-item">Delete</a></li>
+								</ul>
+							</div>
+						</td>
+					</tr>
+				}
+			}
+		</tbody>
+	</table>
+</div>
+
+<div>
+	<div class="btn-group" role="group">
+		<a asp-controller="Users" asp-action="List" class="btn btn-default">Show All</a>
+		<a asp-controller="Users" asp-action="List" asp-route-isActive="true" class="btn btn-default">Active Only</a>
+		<a asp-controller="Users" asp-action="List" asp-route-isActive="false" class="btn btn-default">Non Active</a>
+	</div>
+
+	<a asp-controller="Users" asp-action="AddView" class="btn btn-primary float-end">
+		Add User
+	</a>
+</div>
+
+@code {
+    private UserListViewModel? Model;
+
+	/// <summary>
+	/// Create a UserListViewModel from a list of Users which is fed into the view.
+	/// </summary>
+	/// <param name="users"> List of user models picked up from the service </param>
+	/// <returns>The list view model which is added to List view.</returns>
+	private UserListViewModel? CreateUserListViewModel(IEnumerable<User> users)
+	{
+		var items = users.Select(p => new UserListItemViewModel
+			{
+				Id = p.Id,
+				Forename = p.Forename,
+				Surname = p.Surname,
+				DateOfBirth = p.DateOfBirth.ToString("dd/MM/yyyy"),
+				Email = p.Email,
+				IsActive = p.IsActive
+			});
+
+		var model = new UserListViewModel
+			{
+				Items = items.ToList()
+			};
+
+		return model;
+	}
+
+	protected override void OnInitialized() => Model = CreateUserListViewModel(_userService.GetAll());
+}

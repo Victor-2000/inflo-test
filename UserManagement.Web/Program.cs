@@ -11,6 +11,8 @@ builder.Services
     .AddMarkdown()
     .AddControllersWithViews();
 
+builder.Services.AddServerSideBlazor();
+
 var app = builder.Build();
 
 app.UseMarkdown();
@@ -18,6 +20,9 @@ app.UseMarkdown();
 app.UseHsts();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+app.UseWebAssemblyDebugging();
+app.UseBlazorFrameworkFiles();
 
 app.UseRouting();
 app.UseAuthorization();

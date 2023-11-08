@@ -1,0 +1,8 @@
+﻿@page "/"
+
+<PageTitle>Home</PageTitle>
+
+<p>
+	<MarkdownRenderer MarkdownFilePath="sample-data/README.md" />
+	<a asp-controller="Users" asp-action="List" class="btn btn-primary">To User List</a>
+</p>

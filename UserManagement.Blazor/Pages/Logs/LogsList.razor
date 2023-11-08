@@ -1,0 +1,94 @@
+﻿@page "/logs"
+@using UserManagement.Web.Models.Logs
+@using UserManagement.Services.Domain.Interfaces;
+@using UserManagement.Models;
+
+@inject ILogsService _logService
+
+<h2>Logs</h2>
+
+<div class="table-responsive">
+	<table class="table table-striped overflow-auto" style="max-height:75%">
+        <thead>
+            <tr>
+				<th>Actions</th>
+				<th>Message</th>
+				<th>Log Type</th>
+				<th class ="text-end"></th>
+            </tr>
+        </thead>
+        <tbody>
+			@if(Model != null)
+            @foreach (var log in Model.Items)
+            {
+				<tr>
+					<td>
+						<a asp-controller="Logs" asp-action="LogView" asp-route-LogId="@log.Id" class="btn btn-primary">
+							View Log
+						</a>
+					</td>
+					<td>
+						User "@log.User.Forename @log.User.Surname" was
+						@{
+							switch (log.Type)
+							{
+								
+								case UserManagement.Models.LogType.CREATE:
+									<text>
+										added in the database.
+									</text>
+									break;
+								case UserManagement.Models.LogType.UPDATE:
+									<text>
+										updated in the database.
+									</text>
+									break;
+								case UserManagement.Models.LogType.DELETE:
+									<text>
+										removed from the database.
+									</text>
+									break;
+							}
+						}
+					</td>
+					<td>
+						@log.Type
+					</td>
+					<td class="text-end">
+						@log.DateTimeOfIssue
+					</td>
+				</tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@code{
+	private LogListViewModel? Model;
+
+	/// <summary>
+	/// Create a LogListViewModel from a list of Logs which is fed into the view.
+	/// </summary>
+	/// <param name="logs"> List of logs models picked up from the service </param>
+	/// <returns>The list view model which is added to List view.</returns>
+	public LogListViewModel? CreateListViewModel(IEnumerable<Log> logs)
+	{
+		var items = logs.Select(p => new LogListItemViewModel
+			{
+				Id = p.Id,
+				User = p.User,
+				DateTimeOfIssue = p.DateTimeOfIssue.ToString("dd/MM/yyyy HH:mm:ss"),
+				Type = p.Type,
+			});
+
+		var model = new LogListViewModel
+			{
+				Items = items.ToList()
+			};
+
+		return model;
+	}
+
+	protected override void OnInitialized() => Model = CreateListViewModel(_logService.GetAll());
+
+}

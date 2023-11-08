@@ -1,0 +1,22 @@
+﻿@using Markdig;
+@using Microsoft.AspNetCore.Components;
+@using System.IO;
+@inject HttpClient Http
+
+@if (!string.IsNullOrEmpty(MarkdownContent))
+{
+	@((MarkupString)Markdown.ToHtml(MarkdownContent))
+}
+
+@code{
+	[Parameter] public string? MarkdownFilePath { get; set; }
+	private string? MarkdownContent { get; set; }
+
+	protected override async Task OnInitializedAsync()
+	{
+		if (!string.IsNullOrEmpty(MarkdownFilePath))
+		{
+			MarkdownContent = await Http.GetStringAsync(MarkdownFilePath);
+		}
+	}
+}
