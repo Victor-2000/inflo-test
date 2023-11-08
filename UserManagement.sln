@@ -25,7 +25,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserManagement.Services.Tes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserManagement.Web.Tests", "UserManagement.Web.Tests\UserManagement.Web.Tests.csproj", "{C0F78DDD-C753-432C-8E1B-F88A2DB459FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserManagement.Blazor", "UserManagement.Blazor\UserManagement.Blazor.csproj", "{E067D8D5-1A44-4AA5-A939-1C9E5394B91A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserManagement.Blazor", "UserManagement.Blazor\UserManagement.Blazor.csproj", "{E067D8D5-1A44-4AA5-A939-1C9E5394B91A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
