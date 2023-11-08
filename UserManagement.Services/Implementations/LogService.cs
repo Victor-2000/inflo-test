@@ -19,6 +19,12 @@ public class LogService : ILogsService
 
     public IEnumerable<Log> FindLogsbyUserId(long userId) => _dataAccess.GetAll<Log>(log => log.User, log => log.LogEntries).IgnoreQueryFilters().Where(_dataAccess => _dataAccess.UserId == userId);
 
+    /// <summary>
+    /// Populate delete or create logs
+    /// </summary>
+    /// <param name="user">The user details of the log</param>
+    /// <param name="log">All the details about the log to populate</param>
+    /// <returns>The new log with the entries</returns>
     private Log PopulateLog(User user, Log log)
     {
         Type userType = user.GetType();
@@ -50,6 +56,12 @@ public class LogService : ILogsService
         return log;
     }
 
+    /// <summary>
+    /// Populate update logs
+    /// </summary>
+    /// <param name="user">The user details of the log</param>
+    /// <param name="log">All the details about the log to populate</param>
+    /// <returns>The new log with the entries</returns>
     private Log PopulateLog(Log log, List<LogEntry> entries)
     {
 
