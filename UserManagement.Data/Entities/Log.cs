@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace UserManagement.Models;
 
@@ -13,6 +14,7 @@ public class Log
     public LogType Type { get; set; } = default!;
     public DateTime DateTimeOfIssue { get; set; } = default!;
 
+    [JsonIgnore]
     public User User { get; set; } = default!;
 
     // Collection of LogEntries for property changes

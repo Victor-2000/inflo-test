@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace UserManagement.Models;
 
@@ -14,6 +15,8 @@ public class LogEntry
 
     // Foreign key to the parent Log
     public long LogId { get; set; }
+
+    [JsonIgnore]
     public Log Log { get; set; } = default!;
 }
 
