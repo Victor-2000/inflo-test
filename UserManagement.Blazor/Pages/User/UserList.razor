@@ -1,11 +1,12 @@
 ﻿@page "/users"
+
+@using System.Text.Json;
 @using UserManagement.Blazor.Models.Users
-@using UserManagement.Services.Domain.Interfaces;
 @using UserManagement.Models;
 
-@inject IUserService _userService
-
 <h2>User List</h2>
+
+@responseData
 
 <div class="table-responsive">
 	<table class="table table-striped overflow-auto" style="max-height:75%">
@@ -76,32 +77,23 @@
 </div>
 
 @code {
-    private UserListViewModel? Model;
+	private UserListViewModel? Model;
+	private string responseData = "";
 
-	/// <summary>
-	/// Create a UserListViewModel from a list of Users which is fed into the view.
-	/// </summary>
-	/// <param name="users"> List of user models picked up from the service </param>
-	/// <returns>The list view model which is added to List view.</returns>
-	private UserListViewModel? CreateUserListViewModel(IEnumerable<User> users)
+	protected async override void OnInitialized()
 	{
-		var items = users.Select(p => new UserListItemViewModel
-			{
-				Id = p.Id,
-				Forename = p.Forename,
-				Surname = p.Surname,
-				DateOfBirth = p.DateOfBirth.ToString("dd/MM/yyyy"),
-				Email = p.Email,
-				IsActive = p.IsActive
-			});
-
-		var model = new UserListViewModel
-			{
-				Items = items.ToList()
-			};
-
-		return model;
+		await FetchDataAsync();
 	}
 
-	protected override void OnInitialized() => Model = CreateUserListViewModel(_userService.GetAll());
+	private async Task FetchDataAsync()
+	{
+		using (var httpClient = new HttpClient())
+		{
+			// Replace with your API URL or endpoint
+			var response = await httpClient.GetStringAsync("https://localhost:7000/api/users");
+			responseData = response;
+
+			Model = JsonSerializer.Deserialize<UserListViewModel>(responseData);
+		}
+	}
 }

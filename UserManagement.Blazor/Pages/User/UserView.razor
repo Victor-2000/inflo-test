@@ -1,0 +1,135 @@
+﻿@page "/users/user/{id}"
+
+@using System.Text.Json;
+@using UserManagement.Models;
+
+@inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager
+
+@if(Model != null){
+	<section style="background-color: white; height:90vh">
+		<div class="container py-5 h-100">
+			<div class="row justify-content-center align-items-center h-100">
+				<div class="col-12 col-lg-9 col-xl-7">
+					<div class="shadow card-registration" style="border-radius: 15px;">
+						<div class="card-body p-2 p-md-3">
+							<div class="row">
+								<h2 class="pb-2 col-md-12 mb-4 d-flex align-items-center justify-content-center">@Model.Forename @Model.Surname</h2>
+							</div>
+
+							<div class="row">
+								<div class="col-md-6 mb-4">
+									<h4 class="form-outline w-100 col-lg-3 col-sm-6 d-flex align-items-center justify-content-center">
+										Birthday: @Model.DateOfBirth.ToString("dd/MM/yyyy")
+									</h4>
+								</div>
+								<div class="col-md-6 mb-4 pb-2">
+									<h4 class="form-outline w-100 col-lg-3 col-sm-6 d-flex align-items-center justify-content-center">
+										Email: @Model.Email
+									</h4>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-md-12 mb-4 pb-2">
+									<h4 class="form-outline w-100 col-lg-3 col-sm-6 d-flex align-items-center justify-content-center">
+										@if (Model.IsActive)
+										{
+											<span> Activity: Active </span>
+										}else
+										{
+											<span> Activity: Inactive </span>
+										}
+									</h4>
+								</div>
+							</div>
+
+							<div class="row">
+								<h4 class="pb-2 col-md-12 mb-4 d-flex align-items-center justify-content-center">Logs</h4>
+							</div>
+
+							<div class="table-responsive border p-2 overflow-auto" style="border-radius: 15px; max-height:25rem">
+								<table class="table table-striped">
+									<thead>
+										<tr>
+											<th>Actions</th>
+											<th>Message</th>
+											<th>Type</th>
+											<th class="text-end"></th>
+										</tr>
+									</thead>
+									<tbody>
+										@foreach (var log in Model.Logs)
+										{
+											<tr>
+												<td>
+													<a asp-controller="Logs" asp-action="LogView" asp-route-LogId="@log.Id" class="btn btn-primary text-nowrap">
+														View Log
+													</a>
+												</td>
+												<td>
+													User "@log.User.Forename @log.User.Surname" was
+													@{
+														switch (log.Type)
+														{
+
+															case UserManagement.Models.LogType.CREATE:
+																<text>
+																	added in the database.
+																</text>
+																break;
+															case UserManagement.Models.LogType.UPDATE:
+																<text>
+																	updated in the database.
+																</text>
+																break;
+															case UserManagement.Models.LogType.DELETE:
+																<text>
+																	removed from the database.
+																</text>
+																break;
+														}
+													}
+												</td>
+												<td>
+													@log.Type
+												</td>
+												<td class="text-end">
+													@log.DateTimeOfIssue
+												</td>
+											</tr>
+										}
+									</tbody>
+								</table>
+							</div>
+							<div class="row">
+								<div class="col-md-12 mb-4 d-flex align-items-center justify-content-center">
+									<a asp-controller="Users" asp-action="List" class="btn btn-danger btn-lg m-2">Back</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+}else
+{
+	NavigationManager.NavigateTo("/users");
+}
+
+@code{
+	private User? Model;
+	private string responseData = "";
+
+	private async Task FetchDataAsync(string id)
+	{
+		using (var httpClient = new HttpClient())
+		{
+			// Replace with your API URL or endpoint
+			var response = await httpClient.GetStringAsync("https://localhost:7000/api/users/user?id={id}");
+			responseData = response;
+
+			Model = JsonSerializer.Deserialize<User>(responseData);
+		}
+	}
+}

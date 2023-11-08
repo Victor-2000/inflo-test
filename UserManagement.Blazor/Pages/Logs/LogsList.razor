@@ -1,9 +1,6 @@
 ﻿@page "/logs"
-@using UserManagement.Web.Models.Logs
-@using UserManagement.Services.Domain.Interfaces;
+@using UserManagement.Blazor.Models.Logs
 @using UserManagement.Models;
-
-@inject ILogsService _logService
 
 <h2>Logs</h2>
 
@@ -64,7 +61,7 @@
 </div>
 
 @code{
-	private LogListViewModel? Model;
+	private LogListViewModel? Model = new LogListViewModel();
 
 	/// <summary>
 	/// Create a LogListViewModel from a list of Logs which is fed into the view.
@@ -88,7 +85,5 @@
 
 		return model;
 	}
-
-	protected override void OnInitialized() => Model = CreateListViewModel(_logService.GetAll());
 
 }

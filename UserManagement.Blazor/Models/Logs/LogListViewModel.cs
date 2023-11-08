@@ -1,6 +1,7 @@
-﻿using UserManagement.Models;
+﻿using System.Text.Json.Serialization;
+using UserManagement.Models;
 
-namespace UserManagement.Web.Models.Logs;
+namespace UserManagement.Blazor.Models.Logs;
 
 public class LogListViewModel
 {
@@ -10,6 +11,10 @@ public class LogListViewModel
 public class LogListItemViewModel
 {
     public long Id { get; set; }
+
+    public long UserId { get; set; }
+
+    [JsonIgnore]
     public User User { get; set; } = default!;
     public LogType? Type { get; set; }
     public string? DateTimeOfIssue { get; set; }
